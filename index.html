@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SHAMAN PRODUCTION — Envoi SMS, E-mail & Médias</title>
+<meta name="theme-color" content="#D3EAF7">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.png" type="image/png">
+<link rel="apple-touch-icon" href="icon.png">
+<style>
+  :root{
+    --bg:#D3EAF7; --panel:#F3FAFF; --line:#B8DCEC;
+    --signal:#F0528C; --signal-dim:#FAC3D9; --sky:#2496C7; --sky-dim:#CBE9F5;
+    --amber:#F0603D;
+    --text:#0F2436; --text-dim:#43647F; --danger:#C93C52;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: radial-gradient(1100px 560px at 15% -10%, #F6C7DC 0%, transparent 55%),
+                radial-gradient(1100px 560px at 100% 0%, #B9E1F2 0%, transparent 55%),
+                var(--bg);
+    color:var(--text); font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height:100vh; -webkit-font-smoothing:antialiased; padding-bottom:90px;
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:20px 16px 8px;}
+
+  header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .avatar{
+    width:56px;height:56px;border-radius:50%;object-fit:cover;
+    border:2px solid var(--signal); cursor:pointer; flex-shrink:0;
+    box-shadow:0 2px 10px rgba(255,111,160,.35);
+  }
+  .brand{line-height:1.15;}
+  .brand .eyebrow{font-size:10.5px;letter-spacing:.12em;color:var(--sky);text-transform:uppercase;font-weight:700;}
+  .brand h1{font-size:17px;margin:2px 0 0;font-weight:700;letter-spacing:.01em;color:var(--text);}
+
+  #fullscreenOverlay{
+    display:none; position:fixed; inset:0; background:rgba(10,20,40,.92);
+    z-index:999; align-items:center; justify-content:center; cursor:pointer;
+  }
+  #fullscreenOverlay img{max-width:88vw;max-height:88vh;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+
+  nav.tabs{
+    display:flex; gap:6px; background:var(--panel); border:1px solid var(--line);
+    border-radius:12px; padding:5px; margin-bottom:18px; overflow-x:auto;
+    box-shadow:0 2px 12px rgba(63,182,234,.08);
+  }
+  nav.tabs button{
+    flex:1; white-space:nowrap; background:transparent; border:none; color:var(--text-dim);
+    font-weight:600; font-size:13px; padding:10px 8px; border-radius:9px; cursor:pointer;
+  }
+  nav.tabs button.active{background:linear-gradient(135deg, var(--signal), var(--sky)); color:#FFFFFF;}
+
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; margin-bottom:14px;
+    box-shadow:0 2px 14px rgba(63,182,234,.07);}
+  .card h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);margin:0 0 12px;font-weight:700;}
+  .card p.dim{color:var(--text-dim);font-size:13.5px;line-height:1.5;margin:0 0 10px;}
+
+  label{display:block;font-size:12.5px;color:var(--text-dim);margin:10px 0 5px;font-weight:600;}
+  input[type=text], input[type=tel], input[type=email], textarea, select, input[type=number]{
+    width:100%; background:#E8F4FA; border:1px solid var(--line); color:var(--text);
+    font-size:15px; border-radius:10px; padding:11px 12px; font-family:inherit;
+  }
+  input:focus, textarea:focus, select:focus{outline:2px solid var(--signal); outline-offset:1px;}
+  textarea{resize:vertical; min-height:110px;}
+
+  button.btn{
+    font-family:inherit; border:none; cursor:pointer; border-radius:11px; font-weight:700;
+    font-size:14.5px; padding:13px 16px; transition:transform .1s ease;
+  }
+  button.btn:active{transform:scale(.98);}
+  .btn-primary{background:linear-gradient(135deg, var(--signal), #FF9BC0); color:#FFFFFF; width:100%;
+    box-shadow:0 4px 14px rgba(255,111,160,.35);}
+  .btn-secondary{background:var(--sky-dim);border:1px solid var(--line);color:var(--sky);}
+  .btn-danger{background:transparent;border:1px solid var(--danger);color:var(--danger);}
+  .btn-small{padding:8px 12px;font-size:13px;border-radius:9px;}
+  .row{display:flex;gap:8px;}
+  .row > *{flex:1;}
+
+  .hint{background:var(--sky-dim);border:1px solid #BEE6F7;color:#0E6E96;border-radius:10px;padding:11px 13px;font-size:12.5px;line-height:1.5;margin-bottom:14px;}
+
+  .list-item{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:10px 0;border-bottom:1px solid var(--line);
+  }
+  .list-item:last-child{border-bottom:none;}
+  .list-item .info{min-width:0;}
+  .list-item .info .name{font-weight:600;font-size:14.5px;color:var(--text);}
+  .list-item .info .meta{font-size:12.5px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .chip{display:inline-block;background:var(--signal-dim);border:1px solid #FFC2D9;color:#C43E71;
+    font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin:2px 4px 2px 0;}
+
+  .check-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);}
+  .check-row:last-child{border-bottom:none;}
+  .check-row input[type=checkbox]{width:18px;height:18px;flex-shrink:0;accent-color:var(--signal);}
+  .check-row label{margin:0;color:var(--text);font-weight:500;font-size:14.5px;flex:1;}
+
+  .counter{font-size:12px;color:var(--text-dim);text-align:right;margin-top:4px;}
+  .counter.warn{color:var(--amber);}
+
+  .batch{border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;background:var(--sky-dim);}
+  .batch .batch-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .batch .batch-head .label{font-weight:700;font-size:13.5px;color:var(--text);}
+  .batch .batch-head .count{font-size:12px;color:var(--text-dim);}
+  .batch.done{opacity:.55;}
+  .batch .sent-badge{color:#C43E71;font-size:12.5px;font-weight:700;}
+
+  .media-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0;}
+  .media-thumb{position:relative;border-radius:10px;overflow:hidden;aspect-ratio:1/1;background:var(--sky-dim);border:1px solid var(--line);}
+  .media-thumb img, .media-thumb video{width:100%;height:100%;object-fit:cover;}
+  .media-thumb .rm{position:absolute;top:4px;right:4px;background:rgba(20,30,50,.6);color:#fff;border:none;
+    border-radius:50%;width:22px;height:22px;font-size:13px;cursor:pointer;line-height:1;}
+
+  .empty{color:var(--text-dim);font-size:13.5px;text-align:center;padding:16px 0;}
+
+  .tabpanel{display:none;}
+  .tabpanel.active{display:block;}
+
+  footer{text-align:center;color:var(--text-dim);font-size:11.5px;padding:18px 0 4px;}
+</style>
+</head>
+<body>
+
+<div id="fullscreenOverlay"><img id="fullscreenImg" src="avatar.png" alt=""></div>
+
+<div class="wrap">
+  <header>
+    <img class="avatar" id="avatarBtn" src="avatar.png" alt="Photo de profil">
+    <div class="brand">
+      <div class="eyebrow">Shaman Production</div>
+      <h1>Envoi SMS, E-mail, Médias</h1>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="contacts">Contacts</button>
+    <button class="tab-btn" data-tab="sms">SMS</button>
+    <button class="tab-btn" data-tab="email">E-mail</button>
+    <button class="tab-btn" data-tab="media">Médias · WhatsApp</button>
+    <button class="tab-btn" data-tab="scheduled">Programmés</button>
+  </nav>
+
+  <!-- ===================== CONTACTS ===================== -->
+  <div class="tabpanel active" id="tab-contacts">
+    <div class="card">
+      <h2>Ajouter un contact</h2>
+      <label>Nom</label>
+      <input type="text" id="cName" placeholder="Ex. Koffi Jean">
+      <label>Téléphone (avec indicatif si possible)</label>
+      <input type="tel" id="cPhone" placeholder="Ex. 0748935686">
+      <label>E-mail (optionnel)</label>
+      <input type="email" id="cEmail" placeholder="Ex. koffi@email.com">
+      <label>Groupe (optionnel)</label>
+      <select id="cGroup"><option value="">— Aucun —</option></select>
+      <div style="height:12px"></div>
+      <button class="btn btn-primary" id="addContactBtn">Ajouter le contact</button>
+    </div>
+
+    <div class="card">
+      <h2>Créer un groupe</h2>
+      <div class="row">
+        <input type="text" id="gName" placeholder="Ex. Clients VIP">
+        <button class="btn btn-secondary" id="addGroupBtn" style="flex:0 0 auto;">Créer</button>
+      </div>
+      <div id="groupChips" style="margin-top:10px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>Vos contacts (<span id="contactCount">0</span>)</h2>
+      <input type="text" id="contactSearch" placeholder="Rechercher un contact…" style="margin-bottom:10px;">
+      <div id="contactList"><div class="empty">Aucun contact pour l'instant.</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Sauvegarde</h2>
+      <p class="dim">Vos contacts et groupes restent sur cet appareil. Exportez-les pour les garder en sécurité ou les retrouver sur un autre téléphone.</p>
+      <div class="row">
+        <button class="btn btn-secondary" id="exportBtn">Exporter (.json)</button>
+        <label class="btn btn-secondary" style="text-align:center;">
+          Importer
+          <input type="file" id="importFile" accept=".json" style="display:none;">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SMS ===================== -->
+  <div class="tabpanel" id="tab-sms">
+    <div class="hint">
+      L'envoi se fait via l'application SMS déjà installée sur votre téléphone (et votre forfait SMS actuel) — l'app prépare le message et les numéros, mais c'est vous qui appuyez sur « Envoyer » à chaque lot, comme l'exige Android/iOS pour éviter le spam.
+    </div>
+    <div class="card">
+      <h2>Message</h2>
+      <textarea id="smsBody" placeholder="Votre message…"></textarea>
+      <div class="counter" id="smsCounter">0 caractère · 1 SMS</div>
+    </div>
+    <div class="card">
+      <h2>Destinataires</h2>
+      <div id="smsRecipientPicker"></div>
+    </div>
+    <div class="card">
+      <h2>Taille des lots</h2>
+      <p class="dim">Un « lot » = un envoi à préparer. Un nombre plus petit évite les longs SMS de groupe refusés par certains téléphones.</p>
+      <input type="number" id="smsBatchSize" value="15" min="1" max="50">
+      <div style="height:12px"></div>
+      <button class="btn btn-primary" id="buildSmsBatches">Préparer les envois</button>
+    </div>
+    <div id="smsBatches"></div>
+  </div>
+
+  <!-- ===================== EMAIL ===================== -->
+  <div class="tabpanel" id="tab-email">
+    <div class="hint">
+      Un e-mail peut avoir de nombreux destinataires en copie cachée (CCI) dans un seul envoi — c'est le seul des trois volets où un vrai envoi groupé en un clic est possible. Votre appli e-mail s'ouvre déjà remplie ; il ne reste qu'à appuyer sur Envoyer.
+    </div>
+    <div class="card">
+      <h2>Message</h2>
+      <label>Objet</label>
+      <input type="text" id="mailSubject" placeholder="Objet de l'e-mail">
+      <label>Corps du message</label>
+      <textarea id="mailBody" placeholder="Votre message…" style="min-height:150px;"></textarea>
+    </div>
+    <div class="card">
+      <h2>Destinataires</h2>
+      <p class="dim">Seuls les contacts avec une adresse e-mail enregistrée apparaissent ici.</p>
+      <div id="mailRecipientPicker"></div>
+    </div>
+    <div class="card">
+      <h2>Taille des lots</h2>
+      <input type="number" id="mailBatchSize" value="40" min="1" max="200">
+      <div style="height:12px"></div>
+      <button class="btn btn-primary" id="buildMailBatches">Préparer les envois</button>
+    </div>
+    <div id="mailBatches"></div>
+  </div>
+
+  <!-- ===================== MEDIA / WHATSAPP ===================== -->
+  <div class="tabpanel" id="tab-media">
+    <div class="hint">
+      Après avoir appuyé sur « Partager via WhatsApp », c'est WhatsApp qui vous permettra de cocher plusieurs contacts ou groupes pour l'envoi groupé — exactement comme un partage depuis votre galerie.
+    </div>
+    <div class="card">
+      <h2>Choisir des fichiers</h2>
+      <div class="row">
+        <label class="btn btn-secondary" style="text-align:center;">
+          Galerie
+          <input type="file" id="mediaGallery" accept="image/*,video/*,.pdf,.doc,.docx" multiple style="display:none;">
+        </label>
+        <label class="btn btn-secondary" style="text-align:center;">
+          Appareil photo
+          <input type="file" id="mediaCamera" accept="image/*,video/*" capture="environment" style="display:none;">
+        </label>
+      </div>
+      <div class="media-grid" id="mediaGrid"></div>
+      <label>Légende (optionnelle)</label>
+      <textarea id="mediaCaption" placeholder="Un message à joindre…" style="min-height:70px;"></textarea>
+      <div style="height:12px"></div>
+      <button class="btn btn-primary" id="shareWhatsappBtn">Partager via WhatsApp</button>
+      <div class="counter" id="mediaStatus" style="text-align:left;margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- ===================== PROGRAMMÉS (rappels, pas d'envoi automatique) ===================== -->
+  <div class="tabpanel" id="tab-scheduled">
+    <div class="hint">
+      Ceci programme un <strong>rappel</strong>, pas un envoi automatique : à la date et
+      l'heure choisies, l'app prépare les envois et vous prévient — vous gardez la main,
+      un appui sur Envoyer reste nécessaire à chaque lot, comme partout ailleurs dans l'app.
+      Aucun envoi n'a lieu si l'app n'est pas ouverte à ce moment-là ou juste après.
+    </div>
+    <div class="card">
+      <h2>Nouveau rappel</h2>
+      <label>Message</label>
+      <textarea id="schedBody" placeholder="Votre message…"></textarea>
+      <label>Date et heure</label>
+      <input type="datetime-local" id="schedWhen">
+      <label>Destinataires</label>
+      <div id="schedRecipientPicker"></div>
+      <label>Taille des lots</label>
+      <input type="number" id="schedBatchSize" value="15" min="1" max="50">
+      <div style="height:12px"></div>
+      <button class="btn btn-primary" id="createSchedBtn">Créer le rappel</button>
+      <div class="counter" id="notifPermStatus" style="text-align:left;margin-top:10px;">
+        <button class="btn btn-secondary btn-small" id="askNotifBtn" type="button">Activer les notifications</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Rappels enregistrés</h2>
+      <div id="schedList"><div class="empty">Aucun rappel programmé.</div></div>
+    </div>
+  </div>
+
+  <footer>SHAMAN PRODUCTION — outil interne d'envoi groupé</footer>
+</div>
+
+<script>
+/* ================= STORAGE ================= */
+const DB_KEY = 'shaman_production_db_v1';
+function loadDB(){
+  try{
+    const raw = localStorage.getItem(DB_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return { contacts: [], groups: [], scheduled: [] };
+}
+function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+let db = loadDB();
+if(!db.scheduled) db.scheduled = [];
+
+/* ================= TABS ================= */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tabpanel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab === 'sms') renderRecipientPicker('smsRecipientPicker', 'sms');
+    if(btn.dataset.tab === 'email') renderRecipientPicker('mailRecipientPicker', 'email');
+    if(btn.dataset.tab === 'scheduled') renderRecipientPicker('schedRecipientPicker', 'sms');
+  });
+});
+
+/* ================= AVATAR FULLSCREEN ================= */
+const overlay = document.getElementById('fullscreenOverlay');
+document.getElementById('avatarBtn').addEventListener('click', () => { overlay.style.display = 'flex'; });
+overlay.addEventListener('click', () => { overlay.style.display = 'none'; });
+
+/* ================= CONTACTS ================= */
+function refreshGroupSelect(){
+  const sel = document.getElementById('cGroup');
+  sel.innerHTML = '<option value="">— Aucun —</option>' +
+    db.groups.map(g => `<option value="${g.id}">${escapeHtml(g.name)}</option>`).join('');
+}
+function refreshGroupChips(){
+  const el = document.getElementById('groupChips');
+  if(!db.groups.length){ el.innerHTML = ''; return; }
+  el.innerHTML = db.groups.map(g => {
+    const count = db.contacts.filter(c => c.group === g.id).length;
+    return `<span class="chip">${escapeHtml(g.name)} · ${count}</span>`;
+  }).join('');
+}
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+document.getElementById('addGroupBtn').addEventListener('click', () => {
+  const name = document.getElementById('gName').value.trim();
+  if(!name) return;
+  db.groups.push({ id: 'g' + Date.now(), name });
+  document.getElementById('gName').value = '';
+  saveDB(); refreshGroupSelect(); refreshGroupChips();
+});
+
+document.getElementById('addContactBtn').addEventListener('click', () => {
+  const name = document.getElementById('cName').value.trim();
+  const phone = document.getElementById('cPhone').value.trim();
+  const email = document.getElementById('cEmail').value.trim();
+  const group = document.getElementById('cGroup').value;
+  if(!name || (!phone && !email)){
+    alert('Entrez au moins un nom et un numéro ou un e-mail.');
+    return;
+  }
+  db.contacts.push({ id: 'c' + Date.now() + Math.random().toString(36).slice(2,7), name, phone, email, group });
+  document.getElementById('cName').value = '';
+  document.getElementById('cPhone').value = '';
+  document.getElementById('cEmail').value = '';
+  document.getElementById('cGroup').value = '';
+  saveDB(); renderContactList(); refreshGroupChips();
+});
+
+function renderContactList(filter){
+  const el = document.getElementById('contactList');
+  document.getElementById('contactCount').textContent = db.contacts.length;
+  let list = db.contacts;
+  if(filter){
+    const f = filter.toLowerCase();
+    list = list.filter(c => (c.name||'').toLowerCase().includes(f) || (c.phone||'').includes(f) || (c.email||'').toLowerCase().includes(f));
+  }
+  if(!list.length){ el.innerHTML = '<div class="empty">Aucun contact.</div>'; return; }
+  el.innerHTML = list.map(c => {
+    const g = db.groups.find(g => g.id === c.group);
+    return `<div class="list-item">
+      <div class="info">
+        <div class="name">${escapeHtml(c.name)}</div>
+        <div class="meta">${escapeHtml(c.phone||'')}${c.phone && c.email ? ' · ' : ''}${escapeHtml(c.email||'')}${g ? ' · '+escapeHtml(g.name) : ''}</div>
+      </div>
+      <button class="btn btn-danger btn-small" data-del="${c.id}">Suppr.</button>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('[data-del]').forEach(b => {
+    b.addEventListener('click', () => {
+      db.contacts = db.contacts.filter(c => c.id !== b.dataset.del);
+      saveDB(); renderContactList(document.getElementById('contactSearch').value);
+      refreshGroupChips();
+    });
+  });
+}
+document.getElementById('contactSearch').addEventListener('input', (e) => renderContactList(e.target.value));
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'shaman-production-contacts.json';
+  a.click();
+});
+document.getElementById('importFile').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const imported = JSON.parse(reader.result);
+      if(imported.contacts && imported.groups){
+        db = imported; saveDB();
+        refreshGroupSelect(); refreshGroupChips(); renderContactList();
+        alert('Import réussi.');
+      } else { alert('Fichier invalide.'); }
+    }catch(err){ alert('Fichier invalide.'); }
+  };
+  reader.readAsText(file);
+});
+
+/* ================= RECIPIENT PICKER (shared by SMS & Email) ================= */
+function renderRecipientPicker(containerId, mode){
+  const el = document.getElementById(containerId);
+  const needsField = mode === 'sms' ? 'phone' : 'email';
+  const eligible = db.contacts.filter(c => c[needsField]);
+
+  let html = '';
+  if(db.groups.length){
+    html += '<div style="margin-bottom:10px;">';
+    db.groups.forEach(g => {
+      html += `<div class="check-row">
+        <input type="checkbox" class="group-check" data-group="${g.id}" data-mode="${mode}">
+        <label>Groupe : ${escapeHtml(g.name)}</label>
+      </div>`;
+    });
+    html += '</div>';
+  }
+  if(!eligible.length){
+    html += `<div class="empty">Aucun contact avec ${mode === 'sms' ? 'un numéro' : 'un e-mail'} enregistré.</div>`;
+  } else {
+    eligible.forEach(c => {
+      html += `<div class="check-row">
+        <input type="checkbox" class="contact-check" data-id="${c.id}" data-mode="${mode}" data-group="${c.group||''}">
+        <label>${escapeHtml(c.name)} — ${escapeHtml(c[needsField])}</label>
+      </div>`;
+    });
+  }
+  el.innerHTML = html;
+
+  el.querySelectorAll('.group-check').forEach(gc => {
+    gc.addEventListener('change', () => {
+      el.querySelectorAll(`.contact-check[data-group="${gc.dataset.group}"]`).forEach(cc => {
+        cc.checked = gc.checked;
+      });
+    });
+  });
+}
+
+function getSelected(containerId){
+  const el = document.getElementById(containerId);
+  const ids = Array.from(el.querySelectorAll('.contact-check:checked')).map(c => c.dataset.id);
+  return db.contacts.filter(c => ids.includes(c.id));
+}
+
+/* ================= SMS ================= */
+const smsBody = document.getElementById('smsBody');
+smsBody.addEventListener('input', () => {
+  const len = smsBody.value.length;
+  const isGSM = /^[\x00-\x7F\u00A0-\u00FF€]*$/.test(smsBody.value);
+  const perSeg = isGSM ? 160 : 70;
+  const segs = len === 0 ? 1 : Math.ceil(len / (len > perSeg ? perSeg - 7 : perSeg));
+  const counter = document.getElementById('smsCounter');
+  counter.textContent = `${len} caractère${len>1?'s':''} · ${segs} SMS${segs>1?' (message concaténé)':''}`;
+  counter.className = 'counter' + (segs > 1 ? ' warn' : '');
+});
+
+document.getElementById('buildSmsBatches').addEventListener('click', () => {
+  const recipients = getSelected('smsRecipientPicker');
+  const body = smsBody.value.trim();
+  const batchSize = Math.max(1, parseInt(document.getElementById('smsBatchSize').value) || 15);
+  if(!recipients.length){ alert('Sélectionnez au moins un destinataire.'); return; }
+  if(!body){ alert('Écrivez un message.'); return; }
+
+  const batches = [];
+  for(let i = 0; i < recipients.length; i += batchSize){
+    batches.push(recipients.slice(i, i + batchSize));
+  }
+  renderBatches('smsBatches', batches, (batch) => {
+    const numbers = batch.map(c => c.phone.replace(/\s+/g,'')).join(',');
+    return `sms:${numbers}?body=${encodeURIComponent(body)}`;
+  }, 'sms');
+});
+
+/* ================= EMAIL ================= */
+document.getElementById('buildMailBatches').addEventListener('click', () => {
+  const recipients = getSelected('mailRecipientPicker');
+  const subject = document.getElementById('mailSubject').value.trim();
+  const body = document.getElementById('mailBody').value.trim();
+  const batchSize = Math.max(1, parseInt(document.getElementById('mailBatchSize').value) || 40);
+  if(!recipients.length){ alert('Sélectionnez au moins un destinataire.'); return; }
+  if(!subject && !body){ alert('Écrivez un objet ou un message.'); return; }
+
+  const batches = [];
+  for(let i = 0; i < recipients.length; i += batchSize){
+    batches.push(recipients.slice(i, i + batchSize));
+  }
+  renderBatches('mailBatches', batches, (batch) => {
+    const bcc = batch.map(c => c.email).join(',');
+    return `mailto:?bcc=${encodeURIComponent(bcc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }, 'email');
+});
+
+/* ================= BATCH RENDERING (shared) ================= */
+function renderBatches(containerId, batches, buildLink, kind){
+  const el = document.getElementById(containerId);
+  if(!batches.length){ el.innerHTML = ''; return; }
+  el.innerHTML = batches.map((batch, i) => `
+    <div class="batch" id="${containerId}-batch-${i}">
+      <div class="batch-head">
+        <span class="label">Lot ${i+1} / ${batches.length}</span>
+        <span class="count">${batch.length} destinataire${batch.length>1?'s':''}</span>
+      </div>
+      <div class="row">
+        <a class="btn btn-primary" style="text-align:center;text-decoration:none;" href="${buildLink(batch)}" data-batch="${i}" data-container="${containerId}">
+          ${kind === 'sms' ? 'Ouvrir SMS' : 'Ouvrir e-mail'}
+        </a>
+        <button class="btn btn-secondary btn-small" data-mark="${i}" data-container="${containerId}" style="flex:0 0 auto;">✓ Envoyé</button>
+      </div>
+    </div>
+  `).join('');
+
+  el.querySelectorAll('[data-mark]').forEach(b => {
+    b.addEventListener('click', () => {
+      const batchEl = document.getElementById(`${b.dataset.container}-batch-${b.dataset.mark}`);
+      if(batchEl.classList.contains('done')) return;
+      batchEl.classList.add('done');
+      batchEl.querySelector('.batch-head').insertAdjacentHTML('beforeend', '<span class="sent-badge">✓ Envoyé</span>');
+    });
+  });
+}
+
+/* ================= MEDIA / WHATSAPP ================= */
+let pickedFiles = [];
+
+function addFiles(fileList){
+  Array.from(fileList).forEach(f => pickedFiles.push(f));
+  renderMediaGrid();
+}
+document.getElementById('mediaGallery').addEventListener('change', (e) => addFiles(e.target.files));
+document.getElementById('mediaCamera').addEventListener('change', (e) => addFiles(e.target.files));
+
+function renderMediaGrid(){
+  const grid = document.getElementById('mediaGrid');
+  grid.innerHTML = pickedFiles.map((f, i) => {
+    const url = URL.createObjectURL(f);
+    const isVideo = f.type.startsWith('video/');
+    return `<div class="media-thumb">
+      ${isVideo ? `<video src="${url}" muted></video>` : `<img src="${url}">`}
+      <button class="rm" data-rm="${i}">✕</button>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('[data-rm]').forEach(b => {
+    b.addEventListener('click', () => {
+      pickedFiles.splice(parseInt(b.dataset.rm), 1);
+      renderMediaGrid();
+    });
+  });
+}
+
+document.getElementById('shareWhatsappBtn').addEventListener('click', async () => {
+  const status = document.getElementById('mediaStatus');
+  const caption = document.getElementById('mediaCaption').value.trim();
+  if(!pickedFiles.length && !caption){
+    status.textContent = 'Choisissez au moins un fichier ou écrivez une légende.';
+    return;
+  }
+  const shareData = {};
+  if(caption) shareData.text = caption;
+  if(pickedFiles.length){
+    if(navigator.canShare && navigator.canShare({ files: pickedFiles })){
+      shareData.files = pickedFiles;
+    }
+  }
+  try{
+    if(navigator.share){
+      await navigator.share(shareData);
+      status.textContent = 'Partage ouvert — choisissez WhatsApp puis vos contacts.';
+    } else {
+      status.textContent = "Le partage n'est pas pris en charge par ce navigateur. Ouvrez WhatsApp et joignez les fichiers manuellement depuis votre galerie.";
+    }
+  }catch(err){
+    if(err.name !== 'AbortError'){
+      status.textContent = "Partage indisponible ici — ouvrez WhatsApp et joignez les fichiers manuellement.";
+    }
+  }
+});
+
+/* ================= RAPPELS PROGRAMMÉS ================= */
+document.getElementById('askNotifBtn').addEventListener('click', async () => {
+  if(!('Notification' in window)){
+    document.getElementById('notifPermStatus').insertAdjacentHTML('beforeend', '<span style="margin-left:8px;">Non disponible sur ce navigateur.</span>');
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  document.getElementById('askNotifBtn').textContent = perm === 'granted' ? 'Notifications activées ✓' : 'Notifications refusées';
+});
+
+document.getElementById('createSchedBtn').addEventListener('click', () => {
+  const body = document.getElementById('schedBody').value.trim();
+  const when = document.getElementById('schedWhen').value;
+  const recipients = getSelected('schedRecipientPicker');
+  const batchSize = Math.max(1, parseInt(document.getElementById('schedBatchSize').value) || 15);
+  if(!body){ alert('Écrivez un message.'); return; }
+  if(!when){ alert('Choisissez une date et une heure.'); return; }
+  if(!recipients.length){ alert('Sélectionnez au moins un destinataire.'); return; }
+
+  db.scheduled.push({
+    id: 's' + Date.now(),
+    body, batchSize,
+    when: new Date(when).getTime(),
+    recipientIds: recipients.map(c => c.id),
+    status: 'pending', // pending -> ready -> done
+  });
+  saveDB();
+  document.getElementById('schedBody').value = '';
+  document.getElementById('schedWhen').value = '';
+  renderSchedList();
+});
+
+function renderSchedList(){
+  const el = document.getElementById('schedList');
+  if(!db.scheduled.length){ el.innerHTML = '<div class="empty">Aucun rappel programmé.</div>'; return; }
+
+  const sorted = [...db.scheduled].sort((a,b) => a.when - b.when);
+  el.innerHTML = sorted.map(s => {
+    const d = new Date(s.when);
+    const dateStr = d.toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });
+    const excerpt = s.body.length > 60 ? s.body.slice(0,60) + '…' : s.body;
+    const statusLabel = s.status === 'done' ? '✓ Envoyé' : (s.status === 'ready' ? '● Prêt à envoyer' : '○ À venir');
+    const statusColor = s.status === 'done' ? '#3FB6EA' : (s.status === 'ready' ? '#C43E71' : 'var(--text-dim)');
+    return `<div class="batch" id="sched-${s.id}">
+      <div class="batch-head">
+        <span class="label">${dateStr}</span>
+        <span class="count" style="color:${statusColor};font-weight:700;">${statusLabel}</span>
+      </div>
+      <div class="list-item" style="border:none;padding:4px 0;">
+        <div class="info">
+          <div class="name" style="font-weight:500;font-size:13.5px;">${escapeHtml(excerpt)}</div>
+          <div class="meta">${s.recipientIds.length} destinataire(s) · lots de ${s.batchSize}</div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        ${s.status !== 'done' ? `<button class="btn btn-secondary btn-small" data-open-sched="${s.id}">Ouvrir les envois</button>` : ''}
+        <button class="btn btn-danger btn-small" data-del-sched="${s.id}" style="flex:0 0 auto;">Suppr.</button>
+      </div>
+      <div id="sched-batches-${s.id}"></div>
+    </div>`;
+  }).join('');
+
+  el.querySelectorAll('[data-del-sched]').forEach(b => {
+    b.addEventListener('click', () => {
+      db.scheduled = db.scheduled.filter(s => s.id !== b.dataset.delSched);
+      saveDB(); renderSchedList();
+    });
+  });
+  el.querySelectorAll('[data-open-sched]').forEach(b => {
+    b.addEventListener('click', () => openScheduledBatches(b.dataset.openSched));
+  });
+}
+
+function openScheduledBatches(id){
+  const s = db.scheduled.find(x => x.id === id);
+  if(!s) return;
+  const recipients = db.contacts.filter(c => s.recipientIds.includes(c.id) && c.phone);
+  if(!recipients.length){ alert('Aucun destinataire valide (numéro manquant ?).'); return; }
+  const batches = [];
+  for(let i = 0; i < recipients.length; i += s.batchSize){
+    batches.push(recipients.slice(i, i + s.batchSize));
+  }
+  renderBatches('sched-batches-' + id, batches, (batch) => {
+    const numbers = batch.map(c => c.phone.replace(/\s+/g,'')).join(',');
+    return `sms:${numbers}?body=${encodeURIComponent(s.body)}`;
+  }, 'sms');
+  s.status = 'ready'; // stays ready until user deletes it; marking "done" is manual, like other batches
+  saveDB();
+  renderSchedList();
+}
+
+// Checks due reminders — runs on load and every 20s while the app is open.
+// Web technology has no reliable way to wake up a fully closed app at an
+// exact time, so this is honestly a "catch up when open" mechanism, not a
+// guaranteed background alarm.
+function checkSchedules(){
+  const now = Date.now();
+  let changed = false;
+  db.scheduled.forEach(s => {
+    if(s.status === 'pending' && s.when <= now){
+      s.status = 'ready';
+      changed = true;
+      if('Notification' in window && Notification.permission === 'granted'){
+        new Notification('SHAMAN PRODUCTION — rappel prêt', {
+          body: `Votre envoi programmé (${s.recipientIds.length} destinataires) est prêt.`,
+        });
+      }
+    }
+  });
+  if(changed){ saveDB(); if(document.getElementById('tab-scheduled').classList.contains('active')) renderSchedList(); }
+}
+setInterval(checkSchedules, 20000);
+
+/* ================= INIT ================= */
+refreshGroupSelect();
+refreshGroupChips();
+renderContactList();
+checkSchedules();
+renderSchedList();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
