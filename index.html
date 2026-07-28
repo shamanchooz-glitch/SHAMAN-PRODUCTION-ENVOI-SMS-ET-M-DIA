@@ -90,6 +90,11 @@
   .list-item .info{min-width:0;}
   .list-item .info .name{font-weight:600;font-size:14.5px;color:var(--text);}
   .list-item .info .meta{font-size:12.5px;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+  .group-item{padding:12px 0;border-bottom:1px solid var(--line);}
+  .group-item:last-child{border-bottom:none;}
+  .group-item .name{font-weight:700;font-size:15.5px;color:var(--text);line-height:1.3;}
+  .group-item .meta{font-size:12.5px;color:var(--text-dim);margin-top:2px;}
   .chip{display:inline-block;background:var(--signal-dim);border:1px solid #FFC2D9;color:#C43E71;
     font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;margin:2px 4px 2px 0;}
 
@@ -146,11 +151,219 @@
   <!-- ===================== CONTACTS ===================== -->
   <div class="tabpanel active" id="tab-contacts">
     <div class="card">
+      <h2>Appeler un numéro</h2>
+      <div class="row">
+        <input type="tel" id="quickCallNumber" placeholder="Ex. +2250748935686">
+        <a class="btn btn-primary" id="quickCallBtn" style="flex:0 0 auto;text-decoration:none;text-align:center;" href="tel:">📞 Appeler</a>
+      </div>
+    </div>
+
+    <div class="card">
       <h2>Ajouter un contact</h2>
       <label>Nom</label>
       <input type="text" id="cName" placeholder="Ex. Koffi Jean">
-      <label>Téléphone (avec indicatif si possible)</label>
-      <input type="tel" id="cPhone" placeholder="Ex. 0748935686">
+      <label>Téléphone</label>
+      <div class="row">
+        <select id="cCountry" style="flex:0 0 44%;">
+      <option value="225">Côte d&#39;Ivoire (+225)</option>
+      <option value="93">Afghanistan (+93)</option>
+      <option value="27">Afrique du Sud (+27)</option>
+      <option value="355">Albanie (+355)</option>
+      <option value="213">Algérie (+213)</option>
+      <option value="49">Allemagne (+49)</option>
+      <option value="376">Andorre (+376)</option>
+      <option value="244">Angola (+244)</option>
+      <option value="1268">Antigua-et-Barbuda (+1268)</option>
+      <option value="966">Arabie saoudite (+966)</option>
+      <option value="54">Argentine (+54)</option>
+      <option value="374">Arménie (+374)</option>
+      <option value="61">Australie (+61)</option>
+      <option value="43">Autriche (+43)</option>
+      <option value="994">Azerbaïdjan (+994)</option>
+      <option value="1242">Bahamas (+1242)</option>
+      <option value="973">Bahreïn (+973)</option>
+      <option value="880">Bangladesh (+880)</option>
+      <option value="1246">Barbade (+1246)</option>
+      <option value="32">Belgique (+32)</option>
+      <option value="501">Belize (+501)</option>
+      <option value="975">Bhoutan (+975)</option>
+      <option value="95">Birmanie (Myanmar) (+95)</option>
+      <option value="375">Biélorussie (+375)</option>
+      <option value="591">Bolivie (+591)</option>
+      <option value="387">Bosnie-Herzégovine (+387)</option>
+      <option value="267">Botswana (+267)</option>
+      <option value="673">Brunei (+673)</option>
+      <option value="55">Brésil (+55)</option>
+      <option value="359">Bulgarie (+359)</option>
+      <option value="226">Burkina Faso (+226)</option>
+      <option value="257">Burundi (+257)</option>
+      <option value="229">Bénin (+229)</option>
+      <option value="855">Cambodge (+855)</option>
+      <option value="237">Cameroun (+237)</option>
+      <option value="1">Canada (+1)</option>
+      <option value="238">Cap-Vert (+238)</option>
+      <option value="236">Centrafrique (+236)</option>
+      <option value="56">Chili (+56)</option>
+      <option value="86">Chine (+86)</option>
+      <option value="357">Chypre (+357)</option>
+      <option value="57">Colombie (+57)</option>
+      <option value="269">Comores (+269)</option>
+      <option value="242">Congo-Brazzaville (+242)</option>
+      <option value="243">Congo-Kinshasa (RDC) (+243)</option>
+      <option value="850">Corée du Nord (+850)</option>
+      <option value="82">Corée du Sud (+82)</option>
+      <option value="506">Costa Rica (+506)</option>
+      <option value="385">Croatie (+385)</option>
+      <option value="53">Cuba (+53)</option>
+      <option value="45">Danemark (+45)</option>
+      <option value="253">Djibouti (+253)</option>
+      <option value="1767">Dominique (+1767)</option>
+      <option value="34">Espagne (+34)</option>
+      <option value="372">Estonie (+372)</option>
+      <option value="268">Eswatini (+268)</option>
+      <option value="679">Fidji (+679)</option>
+      <option value="358">Finlande (+358)</option>
+      <option value="33">France (+33)</option>
+      <option value="241">Gabon (+241)</option>
+      <option value="220">Gambie (+220)</option>
+      <option value="233">Ghana (+233)</option>
+      <option value="1473">Grenade (+1473)</option>
+      <option value="30">Grèce (+30)</option>
+      <option value="502">Guatemala (+502)</option>
+      <option value="224">Guinée (+224)</option>
+      <option value="240">Guinée équatoriale (+240)</option>
+      <option value="245">Guinée-Bissau (+245)</option>
+      <option value="592">Guyana (+592)</option>
+      <option value="995">Géorgie (+995)</option>
+      <option value="509">Haïti (+509)</option>
+      <option value="504">Honduras (+504)</option>
+      <option value="36">Hongrie (+36)</option>
+      <option value="91">Inde (+91)</option>
+      <option value="62">Indonésie (+62)</option>
+      <option value="964">Irak (+964)</option>
+      <option value="98">Iran (+98)</option>
+      <option value="353">Irlande (+353)</option>
+      <option value="354">Islande (+354)</option>
+      <option value="972">Israël (+972)</option>
+      <option value="39">Italie (+39)</option>
+      <option value="1876">Jamaïque (+1876)</option>
+      <option value="81">Japon (+81)</option>
+      <option value="962">Jordanie (+962)</option>
+      <option value="7">Kazakhstan (+7)</option>
+      <option value="254">Kenya (+254)</option>
+      <option value="996">Kirghizistan (+996)</option>
+      <option value="686">Kiribati (+686)</option>
+      <option value="965">Koweït (+965)</option>
+      <option value="856">Laos (+856)</option>
+      <option value="266">Lesotho (+266)</option>
+      <option value="371">Lettonie (+371)</option>
+      <option value="961">Liban (+961)</option>
+      <option value="231">Liberia (+231)</option>
+      <option value="218">Libye (+218)</option>
+      <option value="423">Liechtenstein (+423)</option>
+      <option value="370">Lituanie (+370)</option>
+      <option value="352">Luxembourg (+352)</option>
+      <option value="389">Macédoine du Nord (+389)</option>
+      <option value="261">Madagascar (+261)</option>
+      <option value="60">Malaisie (+60)</option>
+      <option value="265">Malawi (+265)</option>
+      <option value="960">Maldives (+960)</option>
+      <option value="223">Mali (+223)</option>
+      <option value="356">Malte (+356)</option>
+      <option value="212">Maroc (+212)</option>
+      <option value="230">Maurice (+230)</option>
+      <option value="222">Mauritanie (+222)</option>
+      <option value="52">Mexique (+52)</option>
+      <option value="691">Micronésie (+691)</option>
+      <option value="373">Moldavie (+373)</option>
+      <option value="377">Monaco (+377)</option>
+      <option value="976">Mongolie (+976)</option>
+      <option value="382">Monténégro (+382)</option>
+      <option value="258">Mozambique (+258)</option>
+      <option value="264">Namibie (+264)</option>
+      <option value="674">Nauru (+674)</option>
+      <option value="505">Nicaragua (+505)</option>
+      <option value="227">Niger (+227)</option>
+      <option value="234">Nigeria (+234)</option>
+      <option value="47">Norvège (+47)</option>
+      <option value="64">Nouvelle-Zélande (+64)</option>
+      <option value="977">Népal (+977)</option>
+      <option value="968">Oman (+968)</option>
+      <option value="256">Ouganda (+256)</option>
+      <option value="998">Ouzbékistan (+998)</option>
+      <option value="92">Pakistan (+92)</option>
+      <option value="680">Palaos (+680)</option>
+      <option value="970">Palestine (+970)</option>
+      <option value="507">Panama (+507)</option>
+      <option value="675">Papouasie-Nouvelle-Guinée (+675)</option>
+      <option value="595">Paraguay (+595)</option>
+      <option value="31">Pays-Bas (+31)</option>
+      <option value="63">Philippines (+63)</option>
+      <option value="48">Pologne (+48)</option>
+      <option value="351">Portugal (+351)</option>
+      <option value="51">Pérou (+51)</option>
+      <option value="974">Qatar (+974)</option>
+      <option value="40">Roumanie (+40)</option>
+      <option value="44">Royaume-Uni (+44)</option>
+      <option value="7">Russie (+7)</option>
+      <option value="250">Rwanda (+250)</option>
+      <option value="1809">République dominicaine (+1809)</option>
+      <option value="420">République tchèque (+420)</option>
+      <option value="1869">Saint-Kitts-et-Nevis (+1869)</option>
+      <option value="378">Saint-Marin (+378)</option>
+      <option value="1784">Saint-Vincent-et-les-Grenadines (+1784)</option>
+      <option value="1758">Sainte-Lucie (+1758)</option>
+      <option value="677">Salomon (+677)</option>
+      <option value="503">Salvador (+503)</option>
+      <option value="685">Samoa (+685)</option>
+      <option value="239">Sao Tomé-et-Principe (+239)</option>
+      <option value="381">Serbie (+381)</option>
+      <option value="248">Seychelles (+248)</option>
+      <option value="232">Sierra Leone (+232)</option>
+      <option value="65">Singapour (+65)</option>
+      <option value="421">Slovaquie (+421)</option>
+      <option value="386">Slovénie (+386)</option>
+      <option value="252">Somalie (+252)</option>
+      <option value="249">Soudan (+249)</option>
+      <option value="211">Soudan du Sud (+211)</option>
+      <option value="94">Sri Lanka (+94)</option>
+      <option value="41">Suisse (+41)</option>
+      <option value="597">Suriname (+597)</option>
+      <option value="46">Suède (+46)</option>
+      <option value="963">Syrie (+963)</option>
+      <option value="221">Sénégal (+221)</option>
+      <option value="992">Tadjikistan (+992)</option>
+      <option value="255">Tanzanie (+255)</option>
+      <option value="235">Tchad (+235)</option>
+      <option value="66">Thaïlande (+66)</option>
+      <option value="670">Timor oriental (+670)</option>
+      <option value="228">Togo (+228)</option>
+      <option value="676">Tonga (+676)</option>
+      <option value="1868">Trinité-et-Tobago (+1868)</option>
+      <option value="216">Tunisie (+216)</option>
+      <option value="993">Turkménistan (+993)</option>
+      <option value="90">Turquie (+90)</option>
+      <option value="688">Tuvalu (+688)</option>
+      <option value="380">Ukraine (+380)</option>
+      <option value="598">Uruguay (+598)</option>
+      <option value="678">Vanuatu (+678)</option>
+      <option value="379">Vatican (+379)</option>
+      <option value="58">Venezuela (+58)</option>
+      <option value="84">Vietnam (+84)</option>
+      <option value="967">Yémen (+967)</option>
+      <option value="260">Zambie (+260)</option>
+      <option value="263">Zimbabwe (+263)</option>
+      <option value="20">Égypte (+20)</option>
+      <option value="971">Émirats arabes unis (+971)</option>
+      <option value="593">Équateur (+593)</option>
+      <option value="291">Érythrée (+291)</option>
+      <option value="1">États-Unis (+1)</option>
+      <option value="251">Éthiopie (+251)</option>
+      <option value="692">Îles Marshall (+692)</option>
+        </select>
+        <input type="tel" id="cPhone" placeholder="Ex. 748935686 (sans le 0)">
+      </div>
+      <p class="dim" style="margin:6px 0 0;font-size:12px;">Pour WhatsApp, entrez le numéro sans le 0 initial — l'indicatif du pays choisi est ajouté automatiquement.</p>
       <label>E-mail (optionnel)</label>
       <input type="email" id="cEmail" placeholder="Ex. koffi@email.com">
       <label>Groupe (optionnel)</label>
@@ -198,13 +411,23 @@
       <div class="counter" id="smsCounter">0 caractère · 1 SMS</div>
     </div>
     <div class="card">
+      <h2>Numéro expéditeur (mémo)</h2>
+      <p class="dim">Comme votre téléphone a deux puces, choisissez ici quel numéro doit servir — l'app l'affichera sur chaque lot pour vous le rappeler. C'est vous qui sélectionnez la bonne SIM sur l'écran d'envoi de votre téléphone (ou réglez votre SIM par défaut pour les SMS dans les paramètres).</p>
+      <select id="smsSenderNumber">
+        <option value="07 49 97 09 18">07 49 97 09 18</option>
+        <option value="07 48 93 56 86" selected>07 48 93 56 86</option>
+        <option value="__other__">Autre numéro…</option>
+      </select>
+      <input type="text" id="smsSenderOther" placeholder="Numéro" style="display:none;margin-top:8px;">
+    </div>
+    <div class="card">
       <h2>Destinataires</h2>
       <div id="smsRecipientPicker"></div>
     </div>
     <div class="card">
       <h2>Taille des lots</h2>
-      <p class="dim">Un « lot » = un envoi à préparer. Un nombre plus petit évite les longs SMS de groupe refusés par certains téléphones.</p>
-      <input type="number" id="smsBatchSize" value="15" min="1" max="50">
+      <p class="dim">Un « lot » = un envoi à préparer. L'app n'impose aucune limite, mais l'application SMS de votre téléphone, elle, en a une : au-delà d'une dizaine à une vingtaine de numéros dans un même envoi groupé, certains téléphones refusent ou tronquent le message. 15 par défaut est un bon compromis — testez plus haut si le vôtre l'accepte.</p>
+      <input type="number" id="smsBatchSize" value="15" min="1">
       <div style="height:12px"></div>
       <button class="btn btn-primary" id="buildSmsBatches">Préparer les envois</button>
     </div>
@@ -230,7 +453,8 @@
     </div>
     <div class="card">
       <h2>Taille des lots</h2>
-      <input type="number" id="mailBatchSize" value="40" min="1" max="200">
+      <p class="dim">Pas de limite imposée par l'app. Beaucoup de messageries plafonnent toutefois un envoi autour de 50 à 100 destinataires — 40 par défaut reste prudent.</p>
+      <input type="number" id="mailBatchSize" value="40" min="1">
       <div style="height:12px"></div>
       <button class="btn btn-primary" id="buildMailBatches">Préparer les envois</button>
     </div>
@@ -250,8 +474,12 @@
           <input type="file" id="mediaGallery" accept="image/*,video/*,.pdf,.doc,.docx" multiple style="display:none;">
         </label>
         <label class="btn btn-secondary" style="text-align:center;">
-          Appareil photo
-          <input type="file" id="mediaCamera" accept="image/*,video/*" capture="environment" style="display:none;">
+          Photo
+          <input type="file" id="mediaCameraPhoto" accept="image/*" capture="environment" style="display:none;">
+        </label>
+        <label class="btn btn-secondary" style="text-align:center;">
+          Vidéo
+          <input type="file" id="mediaCameraVideo" accept="video/*" capture="environment" style="display:none;">
         </label>
       </div>
       <div class="media-grid" id="mediaGrid"></div>
@@ -268,19 +496,41 @@
     <div class="hint">
       Ceci programme un <strong>rappel</strong>, pas un envoi automatique : à la date et
       l'heure choisies, l'app prépare les envois et vous prévient — vous gardez la main,
-      un appui sur Envoyer reste nécessaire à chaque lot, comme partout ailleurs dans l'app.
-      Aucun envoi n'a lieu si l'app n'est pas ouverte à ce moment-là ou juste après.
+      un appui sur Envoyer reste nécessaire à chaque lot (ou, pour WhatsApp, un tap par
+      contact), comme partout ailleurs dans l'app. Aucun envoi n'a lieu si l'app n'est pas
+      ouverte à ce moment-là ou juste après.
     </div>
     <div class="card">
       <h2>Nouveau rappel</h2>
+      <label>Type d'envoi</label>
+      <select id="schedType">
+        <option value="sms">SMS</option>
+        <option value="email">E-mail</option>
+        <option value="whatsapp">WhatsApp</option>
+      </select>
+      <div id="schedSubjectWrap" style="display:none;">
+        <label>Objet</label>
+        <input type="text" id="schedSubject" placeholder="Objet de l'e-mail">
+      </div>
+      <div id="schedSenderWrap">
+        <label>Numéro expéditeur (mémo)</label>
+        <select id="schedSenderNumber">
+          <option value="07 49 97 09 18">07 49 97 09 18</option>
+          <option value="07 48 93 56 86" selected>07 48 93 56 86</option>
+          <option value="__other__">Autre numéro…</option>
+        </select>
+        <input type="text" id="schedSenderOther" placeholder="Numéro" style="display:none;margin-top:8px;">
+      </div>
       <label>Message</label>
       <textarea id="schedBody" placeholder="Votre message…"></textarea>
       <label>Date et heure</label>
       <input type="datetime-local" id="schedWhen">
       <label>Destinataires</label>
       <div id="schedRecipientPicker"></div>
-      <label>Taille des lots</label>
-      <input type="number" id="schedBatchSize" value="15" min="1" max="50">
+      <div id="schedBatchWrap">
+        <label>Taille des lots</label>
+        <input type="number" id="schedBatchSize" value="15" min="1">
+      </div>
       <div style="height:12px"></div>
       <button class="btn btn-primary" id="createSchedBtn">Créer le rappel</button>
       <div class="counter" id="notifPermStatus" style="text-align:left;margin-top:10px;">
@@ -311,6 +561,15 @@ function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 let db = loadDB();
 if(!db.scheduled) db.scheduled = [];
 
+/* ================= APPEL RAPIDE ================= */
+const quickCallNumber = document.getElementById('quickCallNumber');
+const quickCallBtn = document.getElementById('quickCallBtn');
+function updateQuickCallLink(){
+  const n = quickCallNumber.value.trim().replace(/\s+/g,'');
+  quickCallBtn.href = n ? `tel:${n}` : 'tel:';
+}
+quickCallNumber.addEventListener('input', updateQuickCallLink);
+
 /* ================= TABS ================= */
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -320,7 +579,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
     if(btn.dataset.tab === 'sms') renderRecipientPicker('smsRecipientPicker', 'sms');
     if(btn.dataset.tab === 'email') renderRecipientPicker('mailRecipientPicker', 'email');
-    if(btn.dataset.tab === 'scheduled') renderRecipientPicker('schedRecipientPicker', 'sms');
+    if(btn.dataset.tab === 'scheduled') renderRecipientPicker('schedRecipientPicker', document.getElementById('schedType').value === 'email' ? 'email' : 'sms');
   });
 });
 
@@ -340,8 +599,48 @@ function refreshGroupChips(){
   if(!db.groups.length){ el.innerHTML = ''; return; }
   el.innerHTML = db.groups.map(g => {
     const count = db.contacts.filter(c => c.group === g.id).length;
-    return `<span class="chip">${escapeHtml(g.name)} · ${count}</span>`;
+    return `<div class="group-item">
+      <div class="name">${escapeHtml(g.name)}</div>
+      <div class="meta">${count} contact${count>1?'s':''}</div>
+      <div class="row" style="margin-top:8px;gap:6px;">
+        <button class="btn btn-secondary btn-small" data-view-group="${g.id}">Voir</button>
+        <button class="btn btn-secondary btn-small" data-edit-group="${g.id}">Renommer</button>
+        <button class="btn btn-danger btn-small" data-del-group="${g.id}">Suppr.</button>
+      </div>
+    </div>`;
   }).join('');
+
+  el.querySelectorAll('[data-view-group]').forEach(b => {
+    b.addEventListener('click', () => {
+      const g = db.groups.find(x => x.id === b.dataset.viewGroup);
+      document.getElementById('contactSearch').value = '';
+      renderContactList(null, g.id);
+      document.getElementById('contactList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  el.querySelectorAll('[data-edit-group]').forEach(b => {
+    b.addEventListener('click', () => {
+      const g = db.groups.find(x => x.id === b.dataset.editGroup);
+      const newName = prompt('Nouveau nom du groupe :', g.name);
+      if(newName && newName.trim()){
+        g.name = newName.trim();
+        saveDB(); refreshGroupSelect(); refreshGroupChips(); renderContactList();
+      }
+    });
+  });
+  el.querySelectorAll('[data-del-group]').forEach(b => {
+    b.addEventListener('click', () => {
+      const g = db.groups.find(x => x.id === b.dataset.delGroup);
+      const count = db.contacts.filter(c => c.group === g.id).length;
+      const msg = count > 0
+        ? `Supprimer « ${g.name} » ? Les ${count} contact(s) resteront, mais ne seront plus dans ce groupe.`
+        : `Supprimer « ${g.name} » ?`;
+      if(!confirm(msg)) return;
+      db.contacts.forEach(c => { if(c.group === g.id) c.group = ''; });
+      db.groups = db.groups.filter(x => x.id !== g.id);
+      saveDB(); refreshGroupSelect(); refreshGroupChips(); renderContactList();
+    });
+  });
 }
 function escapeHtml(s){
   return (s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
@@ -357,7 +656,9 @@ document.getElementById('addGroupBtn').addEventListener('click', () => {
 
 document.getElementById('addContactBtn').addEventListener('click', () => {
   const name = document.getElementById('cName').value.trim();
-  const phone = document.getElementById('cPhone').value.trim();
+  const dial = document.getElementById('cCountry').value;
+  const localNumber = document.getElementById('cPhone').value.trim().replace(/^0+/, '').replace(/\s+/g,'');
+  const phone = localNumber ? `+${dial}${localNumber}` : '';
   const email = document.getElementById('cEmail').value.trim();
   const group = document.getElementById('cGroup').value;
   if(!name || (!phone && !email)){
@@ -372,7 +673,7 @@ document.getElementById('addContactBtn').addEventListener('click', () => {
   saveDB(); renderContactList(); refreshGroupChips();
 });
 
-function renderContactList(filter){
+function renderContactList(filter, groupFilter){
   const el = document.getElementById('contactList');
   document.getElementById('contactCount').textContent = db.contacts.length;
   let list = db.contacts;
@@ -380,24 +681,41 @@ function renderContactList(filter){
     const f = filter.toLowerCase();
     list = list.filter(c => (c.name||'').toLowerCase().includes(f) || (c.phone||'').includes(f) || (c.email||'').toLowerCase().includes(f));
   }
-  if(!list.length){ el.innerHTML = '<div class="empty">Aucun contact.</div>'; return; }
-  el.innerHTML = list.map(c => {
+  let banner = '';
+  if(groupFilter){
+    list = list.filter(c => c.group === groupFilter);
+    const g = db.groups.find(x => x.id === groupFilter);
+    banner = `<div class="hint" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>Groupe : ${escapeHtml(g ? g.name : '')}</span>
+      <button class="btn btn-secondary btn-small" id="clearGroupFilter" style="flex:0 0 auto;">✕ Tout voir</button>
+    </div>`;
+  }
+  if(!list.length){ el.innerHTML = banner + '<div class="empty">Aucun contact.</div>'; bindClearFilter(); return; }
+  el.innerHTML = banner + list.map(c => {
     const g = db.groups.find(g => g.id === c.group);
     return `<div class="list-item">
       <div class="info">
         <div class="name">${escapeHtml(c.name)}</div>
         <div class="meta">${escapeHtml(c.phone||'')}${c.phone && c.email ? ' · ' : ''}${escapeHtml(c.email||'')}${g ? ' · '+escapeHtml(g.name) : ''}</div>
       </div>
-      <button class="btn btn-danger btn-small" data-del="${c.id}">Suppr.</button>
+      <div class="row" style="flex:0 0 auto;gap:6px;">
+        ${c.phone ? `<a class="btn btn-secondary btn-small" style="text-decoration:none;" href="tel:${c.phone}">📞 Appeler</a>` : ''}
+        <button class="btn btn-danger btn-small" data-del="${c.id}">Suppr.</button>
+      </div>
     </div>`;
   }).join('');
   el.querySelectorAll('[data-del]').forEach(b => {
     b.addEventListener('click', () => {
       db.contacts = db.contacts.filter(c => c.id !== b.dataset.del);
-      saveDB(); renderContactList(document.getElementById('contactSearch').value);
+      saveDB(); renderContactList(document.getElementById('contactSearch').value, groupFilter);
       refreshGroupChips();
     });
   });
+  bindClearFilter();
+  function bindClearFilter(){
+    const btn = document.getElementById('clearGroupFilter');
+    if(btn) btn.addEventListener('click', () => renderContactList());
+  }
 }
 document.getElementById('contactSearch').addEventListener('input', (e) => renderContactList(e.target.value));
 
@@ -481,10 +799,20 @@ smsBody.addEventListener('input', () => {
   counter.className = 'counter' + (segs > 1 ? ' warn' : '');
 });
 
+const smsSenderSelect = document.getElementById('smsSenderNumber');
+const smsSenderOther = document.getElementById('smsSenderOther');
+smsSenderSelect.addEventListener('change', () => {
+  smsSenderOther.style.display = smsSenderSelect.value === '__other__' ? 'block' : 'none';
+});
+function getSmsSenderLabel(){
+  return smsSenderSelect.value === '__other__' ? smsSenderOther.value.trim() : smsSenderSelect.value;
+}
+
 document.getElementById('buildSmsBatches').addEventListener('click', () => {
   const recipients = getSelected('smsRecipientPicker');
   const body = smsBody.value.trim();
   const batchSize = Math.max(1, parseInt(document.getElementById('smsBatchSize').value) || 15);
+  const senderLabel = getSmsSenderLabel();
   if(!recipients.length){ alert('Sélectionnez au moins un destinataire.'); return; }
   if(!body){ alert('Écrivez un message.'); return; }
 
@@ -495,7 +823,7 @@ document.getElementById('buildSmsBatches').addEventListener('click', () => {
   renderBatches('smsBatches', batches, (batch) => {
     const numbers = batch.map(c => c.phone.replace(/\s+/g,'')).join(',');
     return `sms:${numbers}?body=${encodeURIComponent(body)}`;
-  }, 'sms');
+  }, 'sms', senderLabel);
 });
 
 /* ================= EMAIL ================= */
@@ -518,7 +846,7 @@ document.getElementById('buildMailBatches').addEventListener('click', () => {
 });
 
 /* ================= BATCH RENDERING (shared) ================= */
-function renderBatches(containerId, batches, buildLink, kind){
+function renderBatches(containerId, batches, buildLink, kind, senderLabel){
   const el = document.getElementById(containerId);
   if(!batches.length){ el.innerHTML = ''; return; }
   el.innerHTML = batches.map((batch, i) => `
@@ -527,6 +855,7 @@ function renderBatches(containerId, batches, buildLink, kind){
         <span class="label">Lot ${i+1} / ${batches.length}</span>
         <span class="count">${batch.length} destinataire${batch.length>1?'s':''}</span>
       </div>
+      ${senderLabel ? `<div style="font-size:12.5px;color:#C43E71;font-weight:700;margin-bottom:8px;">📱 Envoyer depuis : ${escapeHtml(senderLabel)}</div>` : ''}
       <div class="row">
         <a class="btn btn-primary" style="text-align:center;text-decoration:none;" href="${buildLink(batch)}" data-batch="${i}" data-container="${containerId}">
           ${kind === 'sms' ? 'Ouvrir SMS' : 'Ouvrir e-mail'}
@@ -554,7 +883,8 @@ function addFiles(fileList){
   renderMediaGrid();
 }
 document.getElementById('mediaGallery').addEventListener('change', (e) => addFiles(e.target.files));
-document.getElementById('mediaCamera').addEventListener('change', (e) => addFiles(e.target.files));
+document.getElementById('mediaCameraPhoto').addEventListener('change', (e) => addFiles(e.target.files));
+document.getElementById('mediaCameraVideo').addEventListener('change', (e) => addFiles(e.target.files));
 
 function renderMediaGrid(){
   const grid = document.getElementById('mediaGrid');
@@ -603,6 +933,24 @@ document.getElementById('shareWhatsappBtn').addEventListener('click', async () =
 });
 
 /* ================= RAPPELS PROGRAMMÉS ================= */
+const schedTypeSelect = document.getElementById('schedType');
+schedTypeSelect.addEventListener('change', () => {
+  const type = schedTypeSelect.value;
+  document.getElementById('schedSubjectWrap').style.display = type === 'email' ? 'block' : 'none';
+  document.getElementById('schedSenderWrap').style.display = type === 'email' ? 'none' : 'block';
+  document.getElementById('schedBatchWrap').style.display = type === 'whatsapp' ? 'none' : 'block';
+  renderRecipientPicker('schedRecipientPicker', type === 'email' ? 'email' : 'sms');
+});
+
+const schedSenderSelect = document.getElementById('schedSenderNumber');
+const schedSenderOther = document.getElementById('schedSenderOther');
+schedSenderSelect.addEventListener('change', () => {
+  schedSenderOther.style.display = schedSenderSelect.value === '__other__' ? 'block' : 'none';
+});
+function getSchedSenderLabel(){
+  return schedSenderSelect.value === '__other__' ? schedSenderOther.value.trim() : schedSenderSelect.value;
+}
+
 document.getElementById('askNotifBtn').addEventListener('click', async () => {
   if(!('Notification' in window)){
     document.getElementById('notifPermStatus').insertAdjacentHTML('beforeend', '<span style="margin-left:8px;">Non disponible sur ce navigateur.</span>');
@@ -613,6 +961,8 @@ document.getElementById('askNotifBtn').addEventListener('click', async () => {
 });
 
 document.getElementById('createSchedBtn').addEventListener('click', () => {
+  const type = schedTypeSelect.value;
+  const subject = document.getElementById('schedSubject').value.trim();
   const body = document.getElementById('schedBody').value.trim();
   const when = document.getElementById('schedWhen').value;
   const recipients = getSelected('schedRecipientPicker');
@@ -620,19 +970,26 @@ document.getElementById('createSchedBtn').addEventListener('click', () => {
   if(!body){ alert('Écrivez un message.'); return; }
   if(!when){ alert('Choisissez une date et une heure.'); return; }
   if(!recipients.length){ alert('Sélectionnez au moins un destinataire.'); return; }
+  if(type === 'email' && !subject){ alert("Écrivez un objet pour l'e-mail."); return; }
 
   db.scheduled.push({
     id: 's' + Date.now(),
-    body, batchSize,
+    type, subject, body, batchSize,
+    senderLabel: type === 'sms' ? getSchedSenderLabel() : '',
     when: new Date(when).getTime(),
     recipientIds: recipients.map(c => c.id),
     status: 'pending', // pending -> ready -> done
   });
   saveDB();
+  document.getElementById('schedSubject').value = '';
   document.getElementById('schedBody').value = '';
   document.getElementById('schedWhen').value = '';
   renderSchedList();
 });
+
+function typeLabel(type){
+  return type === 'email' ? 'E-mail' : (type === 'whatsapp' ? 'WhatsApp' : 'SMS');
+}
 
 function renderSchedList(){
   const el = document.getElementById('schedList');
@@ -644,16 +1001,16 @@ function renderSchedList(){
     const dateStr = d.toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' });
     const excerpt = s.body.length > 60 ? s.body.slice(0,60) + '…' : s.body;
     const statusLabel = s.status === 'done' ? '✓ Envoyé' : (s.status === 'ready' ? '● Prêt à envoyer' : '○ À venir');
-    const statusColor = s.status === 'done' ? '#3FB6EA' : (s.status === 'ready' ? '#C43E71' : 'var(--text-dim)');
+    const statusColor = s.status === 'done' ? '#2496C7' : (s.status === 'ready' ? '#C43E71' : 'var(--text-dim)');
     return `<div class="batch" id="sched-${s.id}">
       <div class="batch-head">
-        <span class="label">${dateStr}</span>
+        <span class="label">${typeLabel(s.type)} · ${dateStr}</span>
         <span class="count" style="color:${statusColor};font-weight:700;">${statusLabel}</span>
       </div>
       <div class="list-item" style="border:none;padding:4px 0;">
         <div class="info">
           <div class="name" style="font-weight:500;font-size:13.5px;">${escapeHtml(excerpt)}</div>
-          <div class="meta">${s.recipientIds.length} destinataire(s) · lots de ${s.batchSize}</div>
+          <div class="meta">${s.recipientIds.length} destinataire(s)${s.type !== 'whatsapp' ? ' · lots de '+s.batchSize : ''}</div>
         </div>
       </div>
       <div class="row" style="margin-top:8px;">
@@ -678,16 +1035,44 @@ function renderSchedList(){
 function openScheduledBatches(id){
   const s = db.scheduled.find(x => x.id === id);
   if(!s) return;
-  const recipients = db.contacts.filter(c => s.recipientIds.includes(c.id) && c.phone);
-  if(!recipients.length){ alert('Aucun destinataire valide (numéro manquant ?).'); return; }
-  const batches = [];
-  for(let i = 0; i < recipients.length; i += s.batchSize){
-    batches.push(recipients.slice(i, i + s.batchSize));
+
+  if(s.type === 'email'){
+    const recipients = db.contacts.filter(c => s.recipientIds.includes(c.id) && c.email);
+    if(!recipients.length){ alert('Aucun destinataire valide (e-mail manquant ?).'); return; }
+    const batches = [];
+    for(let i = 0; i < recipients.length; i += s.batchSize) batches.push(recipients.slice(i, i + s.batchSize));
+    renderBatches('sched-batches-' + id, batches, (batch) => {
+      const bcc = batch.map(c => c.email).join(',');
+      return `mailto:?bcc=${encodeURIComponent(bcc)}&subject=${encodeURIComponent(s.subject)}&body=${encodeURIComponent(s.body)}`;
+    }, 'email');
+
+  } else if(s.type === 'whatsapp'){
+    const recipients = db.contacts.filter(c => s.recipientIds.includes(c.id) && c.phone);
+    if(!recipients.length){ alert('Aucun destinataire valide (numéro manquant ?).'); return; }
+    // WhatsApp has no multi-recipient prefill — one link per contact, opened
+    // and sent individually, same principle as everywhere else in the app.
+    const container = document.getElementById('sched-batches-' + id);
+    container.innerHTML = recipients.map((c, i) => `
+      <div class="batch" style="padding:12px;">
+        <div class="batch-head" style="margin-bottom:0;">
+          <span class="label" style="font-size:13px;">${escapeHtml(c.name)} — ${escapeHtml(c.phone)}</span>
+          <a class="btn btn-primary btn-small" style="text-decoration:none;" target="_blank"
+             href="https://wa.me/${c.phone.replace('+','')}?text=${encodeURIComponent(s.body)}">Ouvrir WhatsApp</a>
+        </div>
+      </div>
+    `).join('');
+
+  } else {
+    const recipients = db.contacts.filter(c => s.recipientIds.includes(c.id) && c.phone);
+    if(!recipients.length){ alert('Aucun destinataire valide (numéro manquant ?).'); return; }
+    const batches = [];
+    for(let i = 0; i < recipients.length; i += s.batchSize) batches.push(recipients.slice(i, i + s.batchSize));
+    renderBatches('sched-batches-' + id, batches, (batch) => {
+      const numbers = batch.map(c => c.phone.replace(/\s+/g,'')).join(',');
+      return `sms:${numbers}?body=${encodeURIComponent(s.body)}`;
+    }, 'sms', s.senderLabel);
   }
-  renderBatches('sched-batches-' + id, batches, (batch) => {
-    const numbers = batch.map(c => c.phone.replace(/\s+/g,'')).join(',');
-    return `sms:${numbers}?body=${encodeURIComponent(s.body)}`;
-  }, 'sms');
+
   s.status = 'ready'; // stays ready until user deletes it; marking "done" is manual, like other batches
   saveDB();
   renderSchedList();
