@@ -370,6 +370,7 @@
       <select id="cGroup"><option value="">— Aucun —</option></select>
       <div style="height:12px"></div>
       <button class="btn btn-primary" id="addContactBtn">Ajouter le contact</button>
+      <button class="btn btn-secondary" id="cancelEditBtn" style="display:none;margin-top:8px;">Annuler la modification</button>
     </div>
 
     <div class="card">
@@ -654,6 +655,8 @@ document.getElementById('addGroupBtn').addEventListener('click', () => {
   saveDB(); refreshGroupSelect(); refreshGroupChips();
 });
 
+let editingContactId = null;
+
 document.getElementById('addContactBtn').addEventListener('click', () => {
   const name = document.getElementById('cName').value.trim();
   const dial = document.getElementById('cCountry').value;
@@ -665,13 +668,57 @@ document.getElementById('addContactBtn').addEventListener('click', () => {
     alert('Entrez au moins un nom et un numéro ou un e-mail.');
     return;
   }
-  db.contacts.push({ id: 'c' + Date.now() + Math.random().toString(36).slice(2,7), name, phone, email, group });
+  if(editingContactId){
+    const c = db.contacts.find(x => x.id === editingContactId);
+    Object.assign(c, { name, phone, email, group });
+    cancelContactEdit();
+  } else {
+    db.contacts.push({ id: 'c' + Date.now() + Math.random().toString(36).slice(2,7), name, phone, email, group });
+  }
   document.getElementById('cName').value = '';
   document.getElementById('cPhone').value = '';
   document.getElementById('cEmail').value = '';
   document.getElementById('cGroup').value = '';
   saveDB(); renderContactList(); refreshGroupChips();
 });
+
+// Splits a stored "+<dial><local>" number back into its country dial code
+// and local part, so the edit form can pre-select the right country.
+function splitPhone(fullPhone){
+  const digits = (fullPhone || '').replace('+', '');
+  const dials = Array.from(document.getElementById('cCountry').options)
+    .map(o => o.value).sort((a,b) => b.length - a.length);
+  for(const dial of dials){
+    if(digits.startsWith(dial)) return { dial, local: digits.slice(dial.length) };
+  }
+  return { dial: '225', local: digits };
+}
+
+function startContactEdit(id){
+  const c = db.contacts.find(x => x.id === id);
+  if(!c) return;
+  editingContactId = id;
+  document.getElementById('cName').value = c.name || '';
+  const { dial, local } = splitPhone(c.phone);
+  document.getElementById('cCountry').value = dial;
+  document.getElementById('cPhone').value = local;
+  document.getElementById('cEmail').value = c.email || '';
+  document.getElementById('cGroup').value = c.group || '';
+  document.getElementById('addContactBtn').textContent = 'Enregistrer les modifications';
+  document.getElementById('cancelEditBtn').style.display = 'block';
+  document.getElementById('cName').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function cancelContactEdit(){
+  editingContactId = null;
+  document.getElementById('addContactBtn').textContent = 'Ajouter le contact';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  document.getElementById('cName').value = '';
+  document.getElementById('cPhone').value = '';
+  document.getElementById('cEmail').value = '';
+  document.getElementById('cGroup').value = '';
+}
+document.getElementById('cancelEditBtn').addEventListener('click', cancelContactEdit);
 
 function renderContactList(filter, groupFilter){
   const el = document.getElementById('contactList');
@@ -693,20 +740,23 @@ function renderContactList(filter, groupFilter){
   if(!list.length){ el.innerHTML = banner + '<div class="empty">Aucun contact.</div>'; bindClearFilter(); return; }
   el.innerHTML = banner + list.map(c => {
     const g = db.groups.find(g => g.id === c.group);
-    return `<div class="list-item">
-      <div class="info">
-        <div class="name">${escapeHtml(c.name)}</div>
-        <div class="meta">${escapeHtml(c.phone||'')}${c.phone && c.email ? ' · ' : ''}${escapeHtml(c.email||'')}${g ? ' · '+escapeHtml(g.name) : ''}</div>
-      </div>
-      <div class="row" style="flex:0 0 auto;gap:6px;">
+    return `<div class="group-item">
+      <div class="name">${escapeHtml(c.name)}</div>
+      <div class="meta">${escapeHtml(c.phone||'')}${c.phone && c.email ? ' · ' : ''}${escapeHtml(c.email||'')}${g ? ' · '+escapeHtml(g.name) : ''}</div>
+      <div class="row" style="margin-top:8px;gap:6px;">
         ${c.phone ? `<a class="btn btn-secondary btn-small" style="text-decoration:none;" href="tel:${c.phone}">📞 Appeler</a>` : ''}
+        <button class="btn btn-secondary btn-small" data-edit="${c.id}">Modifier</button>
         <button class="btn btn-danger btn-small" data-del="${c.id}">Suppr.</button>
       </div>
     </div>`;
   }).join('');
+  el.querySelectorAll('[data-edit]').forEach(b => {
+    b.addEventListener('click', () => startContactEdit(b.dataset.edit));
+  });
   el.querySelectorAll('[data-del]').forEach(b => {
     b.addEventListener('click', () => {
       db.contacts = db.contacts.filter(c => c.id !== b.dataset.del);
+      if(editingContactId === b.dataset.del) cancelContactEdit();
       saveDB(); renderContactList(document.getElementById('contactSearch').value, groupFilter);
       refreshGroupChips();
     });
